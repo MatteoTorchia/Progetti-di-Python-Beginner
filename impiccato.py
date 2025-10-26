@@ -20,11 +20,11 @@ def hangman():
 
     while len(wordLetters) > 0 and lives > 0:
         print("\n")
-        print("You already used these letters: ", " ".join(usedLetters))
+        print("Hai già usato queste lettere: ", " ".join(usedLetters))
         if lives > 1:
-            print(f"You have {lives} lives remaining.")
+            print(f"Hai ancora {lives} vite rimaste.")
         else:
-            print(f"You have {lives} life remaining.")
+            print(f"Hai ancora {lives} vita rimasta.")
 
         # wordList = [letter if letter in usedLetters else "-" for letter in word]
         # Versione Lunga e Dettagliata (Equivalente)
@@ -34,31 +34,32 @@ def hangman():
                 wordList.append(letter)
             else:
                 wordList.append("-")
-        print("Current word: " , " ".join(wordList))
+        print("La parola: " , " ".join(wordList))
 
-        userLetter = input("Guess a letter:").upper()
+        userLetter = input("Indovina una lettera:").upper()
         if userLetter in (alphabet - usedLetters):
             usedLetters.add(userLetter)
             if userLetter in wordLetters:
                 wordLetters.remove(userLetter)
-                print(f"You guessed! '{userLetter}' is in the word")
+                print(f"Hai indovinato! '{userLetter}' fa parte della parola")
             else:
-                print(f"'{userLetter}'is not in the word.")
+                print(f"'{userLetter}' non fa parte della parola.")
                 lives -= 1  # lives = lives - 1
 
         elif userLetter in usedLetters:
-            print("You have already tried this character. Please give a different input")
+            print("Hai già provato questa lettera. Prova qualcosa di diverso.")
         
         else:
-            print("Invalid character. Please give a different input")
+            print("Carattere non valido. Prova qualcosa di diverso")
 
     # gets here when len(wordLetters) == 0 or lives == 0
     if len(wordLetters) == 0:
         if lives > 1:
-            print(f"\nYou won with {lives} lives remaining!!! The word was '{word}'!")
+            print(f"\nHai vinto con {lives} vite rimanenti!!! La parola era '{word}'!")
         else:
-            print(f"\nYou won with just 1 life remaining!!! The word was '{word}'!")
+            print(f"\nHai vinto con una sola vita rimanente, per un pelo!!! La parola era '{word}'!")
+
     else:
-        print(f"You've run out of lives :( \n The word was '{word}'. \nGAME OVER.")
+        print(f"Hai finito le vite :( \n La parola era '{word}'. \nGAME OVER.")
 
 hangman()
