@@ -1,0 +1,1 @@
+words = ["parola non-valida", "ciao", "casa", "camino", "cane", "gatto", "lucertola", "serpente", "lingua", "cibo", "mangiare", "ristorante", "cuoco", "cameriere", "lavoro", "soldi", "banca", "scuola", "studiare", "libri", "matematica", "italiano", "cucina", "verdure"]
