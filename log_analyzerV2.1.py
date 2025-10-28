@@ -18,6 +18,18 @@ DEBUG: Variable 'x' = 10
 INFO: Server shutdown initiated
 """
 
+def data_extractor(log_content):
+    pattern = r"(INFO: User '(?P<username>.+?)' logged in)|(ERROR: File not found '(?P<filename>.+?)')"
+    matches = re.finditer(pattern, log_content)
+
+    extracted_data = []
+    for match in matches:
+        match_dict = match.groupdict()        
+        extracted_data.append(match_dict)
+
+    return [d for d in extracted_data if any(d.values())]
+
+
 def log_analyzer_regex(log_content):
     events = {}  #dictionary with event_type and how many times the event appeared
 
@@ -28,17 +40,23 @@ def log_analyzer_regex(log_content):
 
 
 def print_report(events):
-    print("Report Frequenza Eventi:")
-    print("------------------------")
+    print("\nReport Frequenza Eventi:")
+    print("------------------------------------------------")
     for event_type, count in events.items():
         print(f"Evento: {event_type:<10} -> Conteggio: {count}")
-    print("------------------------")
+    print("------------------------------------------------")
 
 
 
 # --- Flusso Principale ---
-log_simulato = log_data_content 
-# (Più tardi qui useremo 'with open...')
+extracted_info = data_extractor(log_data_content)
+print("\nDati Estratti:")
+print("------------------------------------------------")
+for item in extracted_info:
+    print(item)
+
+
+log_simulato = log_data_content
 
 events = log_analyzer_regex(log_simulato)
 print_report(events)
