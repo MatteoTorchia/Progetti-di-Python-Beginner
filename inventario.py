@@ -22,7 +22,7 @@ biro = {
 
 inventario = [mela, quaderno, biro]
 
-def aggiungi_prodotto(inventarioid, nome, prezzo, quantita):
+def aggiungi_prodotto(inventario, id, nome, prezzo, quantita):
     nuovo_podotto = {
         "id": id,
         "nome" : nome,
@@ -52,4 +52,11 @@ def aggiorna_quantita(inventario, id_prodotto, nuova_quantita):
 
 # --- Flusso Principale ---
 
-aggiorna_quantita(inventario, 9, 777)
+aggiungi_prodotto(inventario,4, "PC", 900, 22)
+pc = cerca_prodotto_per_id(inventario, 4)
+print(pc["quantita"])
+
+aggiorna_quantita(inventario, 4, 21)
+print(pc["quantita"])
+
+cerca_prodotto_per_id(inventario, 7)
