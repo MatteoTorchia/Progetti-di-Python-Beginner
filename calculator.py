@@ -9,6 +9,20 @@ def ottieni_membro(n):
         except ValueError:
             print("Il valore inserito non è valido. Prova ad inserire un numero.")
 
+def ottieni_operatore_ed_esegui(a, b):
+    while True:
+        op = input("Scegli un operatore matematico tra quelli disponibili: +, -, *, /. ")
+        try:
+            if op == "+":
+                return addizione(a, b)
+            elif op == "-":
+                return sottrazione(a, b)
+            elif op == "*":
+                return moltiplicazione(a, b)
+            elif op == "/":
+                return divisione(a, b)                
+        except ValueError:
+            print("Non hai scelto un operatore disponibile.")
 
 
 def addizione(a, b):
@@ -25,27 +39,15 @@ def moltiplicazione(a, b):
 
 def divisione(a, b):
     if b == 0:
-        print("Non è possibile dividere per zero.")
+        c = print("Non è possibile dividere per zero.")
+        return c
     else:
         c = a / b
         return c
 
 
 # --- Flusso Principale ---
-
-
 a = ottieni_membro(1)
 b = ottieni_membro(2)
 
-op = input("Scegli l'operatore matematico. +, -, *, /")
-
-if op == "+":
-    print(addizione(a, b))
-elif op == "-":
-    print(sottrazione(a, b))
-elif op == "*":
-    print(moltiplicazione(a, b))
-elif op == "/":
-    print(divisione(a, b))
-else:
-    print("Non hai scelto un operatore disponibile.")
+print(ottieni_operatore_ed_esegui(a, b))
