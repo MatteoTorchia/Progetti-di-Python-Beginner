@@ -1,0 +1,135 @@
+
+---
+
+**Documento di Analisi Tecnica (TDD): Pygame Tic-Tac-Toe**
+
+* **Autore:** Senior Software Architect
+* **Progetto:** "Project Scribe" (Tic-Tac-Toe)
+* **Riferimento PRD/FAD:** v1.0
+* **Versione:** 1.0
+* **Data:** 30 ottobre 2025
+
+---
+
+## 1. ⚙️ Stack Tecnologico
+
+Questo progetto utilizzerà le seguenti tecnologie, in linea con i requisiti non funzionali (NFR) di manutenibilità e prestazioni.
+
+| Componente | Tecnologia / Libreria | Versione Minima | Scopo |
+| :--- | :--- | :--- | :--- |
+| Linguaggio | **Python** | 3.9+ | Linguaggio di programmazione principale. |
+| Grafica/Engine | **Pygame** | 2.x | Gestione di finestre, input, rendering e loop di gioco. |
+| Strutture Dati | **`enum` (Modulo standard)** | N/A | Definizione chiara degli stati (Gioco, FSM, Modo). |
+| Logica AI | **Algoritmi Nativi** | N/A | Implementazione di logica AI difensiva/offensiva di base. |
+| Testing | **`unittest` (Modulo standard)** | N/A | Testing del modulo **Model** (critico, senza dipendenze Pygame). |
+
+---
+
+## 2. 🧱 Strutture Dati Dettagliate
+
+### 2.1 Enumeratori (Constants e Enums)
+
+Per gestire gli stati in modo robusto e aderire al principio "Single Source of Truth", si useranno costanti e/o l'**`enum`** di Python.
+
+| Enum / Costante | Posizione | Valori Esempio | Descrizione |
+| :--- | :--- | :--- | :--- |
+| **`GameState`** | `model.py` / `controller.py` | `MAIN_MENU`, `IN_GAME`, `GAME_OVER` | Lo stato corrente della FSM dell'applicazione. |
+| **`GameStatus`** | `model.py` | `ONGOING`, `X_WINS`, `O_WINS`, `DRAW` | Lo stato logico del gioco (usato nel Modello). |
+| **`GameMode`** | `model.py` | `PVP`, `PVAI` | Modalità di gioco selezionata. |
+| **`CellState`** | `model.py` | `EMPTY`, `X`, `O` | Stato di una singola cella della griglia. |
+| **`CONFIG`** | `config.py` | `WINDOW_SIZE = (800, 600)`, `LINE_COLOR = (50, 50, 50)` | Tutte le costanti relative alla grafica/UI. |
+
+### 2.2 Struttura Dati della Griglia (Model)
+
+* **Nome:** `self.board` all'interno di `GameModel`.
+* **Tipo:** Lista di Liste Python.
+* **Definizione:** `list[list[CellState]]`
+* **Esempio:** `[[CellState.X, CellState.EMPTY, CellState.O], [CellState.O, CellState.X, CellState.EMPTY], [CellState.EMPTY, CellState.O, CellState.X]]`
+* **Motivazione Tecnica:** La rappresentazione a matrice 3x3 è la più efficiente per l'accesso e la verifica delle condizioni di vittoria (cicli semplici e diretti su righe, colonne e diagonali).
+
+### 2.3 Struttura Dati della Linea Vincente (Model)
+
+* **Nome:** `self.winning_line` all'interno di `GameModel`.
+* **Tipo:** `tuple` (Tupla Python).
+* **Definizione:** `(line_type, index)` o `None`.
+* **Esempio di Valori:**
+    * Vittoria su Riga 1: `('row', 1)`
+    * Vittoria su Colonna 0: `('col', 0)`
+    * Vittoria su Diagonale Principale: `('diag', 0)`
+    * Vittoria su Diagonale Secondaria: `('diag', 1)`
+* **Motivazione Tecnica:** Questa struttura *compatta* permette alla View di disegnare la linea vincente corretta senza dover ricalcolare la posizione, semplicemente interpretando il tipo (`row`, `col`, `diag`) e l'indice.
+
+### 2.4 Mappatura Elementi UI (View Utility)
+
+* **Metodo Emettitore:** `GameView.get_element_at_pos(pos)`
+* **Output Tipo:** `dict` (Dizionario)
+* **Output Dettagliato:**
+    * **Cella Griglia:** `{'type': 'CELL', 'row': int, 'col': int}`
+    * **Pulsante Menu:** `{'type': 'BUTTON', 'id': 'PVP' or 'PVAI' or 'QUIT'}`
+    * **Nessun Elemento:** `{'type': 'NONE'}`
+* **Motivazione Tecnica:** Il Controller necessita di ricevere un'informazione *logica* dall'input Pygame. La View è responsabile della mappatura inversa (Pixel -> Logica) grazie alle sue conoscenze geometriche.
+
+---
+
+## 3. 🎯 Specifiche Modulari e Interfacce
+
+### 3.1 `GameModel` (Dettagli Tecnici)
+
+#### Algoritmo `_check_game_over()`
+Questa funzione, chiamata dopo ogni mossa, deve essere ottimizzata per la velocità e deve operare **solo** sul `self.board`.
+
+1.  **Iterazione Righe:** Ciclo $i = 0$ a $2$. Verifica se $board[i][0] == board[i][1] == board[i][2]$ e non è `EMPTY`. Se vero, imposta vittoria e `winning_line = ('row', i)`.
+2.  **Iterazione Colonne:** Ciclo $j = 0$ a $2$. Verifica se $board[0][j] == board[1][j] == board[2][j]$ e non è `EMPTY`. Se vero, imposta vittoria e `winning_line = ('col', j)`.
+3.  **Diagonale Principale (0,0) -> (2,2):** Verifica $board[0][0] == board[1][1] == board[2][2]$. Se vero, imposta vittoria e `winning_line = ('diag', 0)`.
+4.  **Diagonale Secondaria (0,2) -> (2,0):** Verifica $board[0][2] == board[1][1] == board[2][0]$. Se vero, imposta vittoria e `winning_line = ('diag', 1)`.
+5.  **Pareggio:** Se non ci sono vincitori e non ci sono celle `EMPTY` nella griglia (es. verifica la presenza di `CellState.EMPTY` in una vista appiattita della board), imposta `GameStatus.DRAW`.
+
+### 3.2 `AIService` (Algoritmo AI Semplice)
+
+L'AI deve operare in base a un ordine di priorità ben definito per soddisfare l'esigenza di base:
+
+1.  **Priorità 1: Vittoria Immediata (Offensiva - FR 2.5.4):** Scansiona la griglia per trovare una cella che, se occupata dall'AI ('O'), creerebbe una linea vincente. Ritorna questa mossa.
+2.  **Priorità 2: Blocco Immediato (Difensiva - FR 2.5.3):** Scansiona la griglia per trovare una cella che, se occupata dal Giocatore ('X'), creerebbe una linea vincente per 'X'. Ritorna questa mossa.
+3.  **Priorità 3: Mossa Strategica/Opportunità:**
+    * Se il centro (`1, 1`) è libero, scegli il centro.
+    * Se un angolo (`0,0`, `0,2`, `2,0`, `2,2`) è libero, scegli un angolo a caso.
+4.  **Priorità 4: Ultima Scelta:** Scegli la prima cella libera trovata (es. iterando da `(0, 0)` a `(2, 2)`).
+
+### 3.3 `GameView` (Dettagli Pygame)
+
+#### Rendering della Griglia
+* La griglia sarà centrata sulla finestra.
+* Si utilizzerà la funzione `pygame.draw.line()` per disegnare le 4 linee della griglia (2 orizzontali e 2 verticali), calcolando le coordinate basandosi su `CONFIG.WINDOW_SIZE` e `CONFIG.BOARD_SIZE`.
+
+#### Rendering di X e O
+* **'O':** Disegnato usando `pygame.draw.circle()`. Il raggio sarà $R = \text{Dimensione Cella} / 2 \times 0.8$ (per un margine).
+* **'X':** Disegnato usando due chiamate a `pygame.draw.line()`, formando una croce.
+
+#### Hit Testing (Pixel -> Logica)
+* Il metodo `get_element_at_pos(pos)` della View calcolerà la cella cliccata dividendo la coordinata $X$ (o $Y$) del click per la dimensione della cella.
+* $Row = \lfloor (Y_{click} - Y_{top\_board}) / \text{Cell\_Height} \rfloor$
+* $Col = \lfloor (X_{click} - X_{left\_board}) / \text{Cell\_Width} \rfloor$
+
+---
+
+## 4. 🧪 Strategia di Test (Testing Unitario)
+
+L'approccio MVC facilita un testing robusto e disaccoppiato.
+
+### 4.1 Modulo `model.py` (Test Critici)
+Il `GameModel` deve essere testato intensivamente poiché contiene tutta la logica di business e **non ha dipendenze da Pygame**.
+
+* **Test di Funzionalità:**
+    * Testare tutte le 8 combinazioni vincenti (3 righe, 3 colonne, 2 diagonali) per 'X' e 'O'.
+    * Testare la condizione di pareggio (`DRAW`).
+    * Testare l'impossibilità di muovere su una cella occupata o a gioco finito.
+* **Setup:** Utilizzare il modulo standard `unittest`.
+
+### 4.2 Modulo `ai_service.py` (Test di Logica)
+* **Test Difensivi:** Creare scenari in cui 'X' è a una mossa dalla vittoria e verificare che l'AI scelga la mossa di blocco.
+* **Test Offensivi:** Creare scenari in cui 'O' è a una mossa dalla vittoria e verificare che l'AI scelga la mossa vincente.
+
+### 4.3 `GameController` e `GameView`
+Questi moduli richiedono **Testing Funzionale/Integrazione** (es. verificare che un click in pixel `(400, 300)` causi l'aggiornamento di `board[1][1]` nel Modello e il corretto rendering della 'X' a schermo). Per questo progetto MVP, l'attenzione principale sarà sul testing unitario del Modello e del Servizio AI.
+
+---

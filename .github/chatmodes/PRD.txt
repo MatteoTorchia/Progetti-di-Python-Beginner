@@ -1,0 +1,111 @@
+Certamente. Ecco un Product Requirements Document (PRD) per un gioco Tic-Tac-Toe (Tris) sviluppato in Pygame, redatto dalla prospettiva di un Senior Software Architect.
+
+---
+
+**Documento Requisiti di Prodotto (PRD): Pygame Tic-Tac-Toe**
+
+* **Autore:** Senior Software Architect
+* **Progetto:** "Project Scribe" (Tic-Tac-Toe)
+* **Versione:** 1.0
+* **Data:** 30 ottobre 2025
+
+---
+
+## 1. 🎯 Introduzione e Obiettivi
+
+### 1.1 Panoramica
+Questo documento definisce i requisiti funzionali e non funzionali per la creazione di un'applicazione desktop del gioco "Tic-Tac-Toe" (noto anche come "Tris"). L'applicazione sarà sviluppata utilizzando la libreria **Pygame** per il rendering grafico e la gestione degli eventi.
+
+### 1.2 Obiettivi del Prodotto
+* **P.1:** Fornire un'implementazione completa, stabile e reattiva del classico gioco Tic-Tac-Toe.
+* **P.2:** Creare una base di codice modulare e manutenibile che aderisca ai principi di **Separation of Concerns (SoC)**.
+* **P.3:** Fungere da progetto di riferimento (boilerplate) per future applicazioni basate su Pygame, dimostrando un'architettura di gioco pulita.
+
+---
+
+## 2. 📋 Requisiti Funzionali (FR)
+
+### FR 2.1: Flusso di Gioco Principale
+* **FR 2.1.1:** All'avvio, l'applicazione deve presentare un **Menu Principale**.
+* **FR 2.1.2:** Il Menu Principale deve offrire le seguenti scelte:
+    * Gioca vs. Giocatore (PvP)
+    * Gioca vs. AI (PvAI)
+    * Esci dal Gioco
+* **FR 2.1.3:** L'applicazione deve renderizzare una griglia di gioco standard 3x3.
+* **FR 2.1.4:** I giocatori ("X" e "O") devono alternarsi. Il giocatore "X" inizia sempre la prima partita.
+
+### FR 2.2: Interazione Utente (Input)
+* **FR 2.2.1:** L'input primario deve essere il **click del mouse**.
+* **FR 2.2.2:** Un click su una cella **vuota** durante il turno del giocatore deve piazzare il simbolo di quel giocatore ("X" o "O") in quella cella.
+* **FR 2.2.3:** Un click su una cella **già occupata** non deve produrre alcun effetto.
+* **FR 2.2.4:** L'applicazione deve gestire l'evento di chiusura della finestra (es. `pygame.QUIT`) in qualsiasi momento per terminare il processo.
+
+### FR 2.3: Logica e Stato del Gioco
+* **FR 2.3.1:** Il sistema deve rilevare automaticamente una condizione di **vittoria** (tre simboli identici in linea orizzontale, verticale o diagonale).
+* **FR 2.3.2:** Il sistema deve rilevare automaticamente una condizione di **pareggio** (tutte le 9 celle sono occupate senza che ci sia un vincitore).
+* **FR 2.3.3:** Al termine della partita (vittoria o pareggio), l'input di gioco sulla griglia deve essere disabilitato.
+
+### FR 2.4: Feedback Visivo e UI
+* **FR 2.4.1:** L'interfaccia deve mostrare chiaramente quale giocatore ha il turno corrente (es. "Turno di X").
+* **FR 2.4.2:** In caso di vittoria, il sistema deve evidenziare visivamente la linea vincente (es. tracciando una linea sopra i tre simboli).
+* **FR 2.4.3:** Al termine della partita, deve apparire un messaggio di stato chiaro (es. "Ha vinto X!", "Ha vinto O!", "Pareggio!").
+* **FR 2.4.4:** Dopo la fine della partita, devono essere presentati i pulsanti "Gioca Ancora" (resetta la griglia) e "Torna al Menu".
+
+### FR 2.5: Intelligenza Artificiale (AI)
+* **FR 2.5.1:** Nella modalità PvAI, il giocatore "O" sarà controllato dall'AI.
+* **FR 2.5.2:** L'AI deve essere in grado di effettuare mosse valide (cioè scegliere solo celle vuote).
+* **FR 2.5.3:** L'AI deve implementare una logica **difensiva di base**: deve essere in grado di bloccare una mossa vincente immediata del giocatore umano.
+* **FR 2.5.4:** (Opzionale, se il tempo lo permette) L'AI dovrebbe essere in grado di cogliere un'opportunità di vittoria immediata.
+
+---
+
+## 3. 🛠️ Requisiti Non Funzionali (NFR)
+
+### NFR 3.1: Architettura Software
+* **NFR 3.1.1 (Critico):** L'applicazione deve seguire il pattern architetturale **Model-View-Controller (MVC)** o un suo derivato (es. Model-View-Presenter).
+    * **Model:** Deve contenere *tutta* la logica di business e lo stato del gioco (la griglia `board[3][3]`, `currentPlayer`, `checkWin()`, `checkDraw()`). **Non deve avere alcuna dipendenza da Pygame.**
+    * **View:** Deve essere responsabile *esclusivamente* del rendering. Legge lo stato dal Modello e disegna la griglia, i simboli e i messaggi di UI utilizzando Pygame.
+    * **Controller:** Deve gestire l'input dell'utente (es. il loop `pygame.event.get()`). Traduce gli eventi di Pygame (come `MOUSEBUTTONDOWN`) in azioni sul Modello (es. `model.makeMove(row, col)`).
+* **NFR 3.1.2:** Lo stato del gioco (Menu, InGioco, FinePartita) deve essere gestito tramite una **Macchina a Stati Finiti (Finite State Machine - FSM)** per garantire transizioni pulite.
+
+### NFR 3.2: Prestazioni
+* **NFR 3.2.1:** Il loop di gioco deve mantenere un frame rate stabile (target: 60 FPS), anche se il gioco è a turni.
+* **NFR 3.2.2:** La risposta al click dell'utente deve essere percepita come istantanea (latenza input-rendering < 50ms).
+* **NFR 3.2.3:** L'utilizzo della CPU a riposo (es. in attesa dell'input del giocatore) deve essere minimo.
+
+### NFR 3.3: Manutenibilità e Codice
+* **NFR 3.3.1:** Il codice deve aderire rigorosamente allo style guide **PEP 8**.
+* **NFR 3.3.2:** Le costanti "magiche" (colori RGB, dimensioni della finestra, spessore delle linee) devono essere definite in un file di configurazione separato (es. `config.py`) per facilitare il theming e la modifica.
+* **NFR 3.3.3:** La logica dell'AI deve essere isolata nel proprio modulo/classe (es. `AIService.py`), disaccoppiata dal Modello di gioco principale.
+
+### NFR 3.4: Piattaforma e Dipendenze
+* **NFR 3.4.1:** **Linguaggio:** Python 3.9 o superiore.
+* **NFR 3.4.2:** **Libreria Core:** Pygame 2.x.
+* **NFR 3.4.3:** L'applicazione deve essere cross-platform (eseguibile su Windows, macOS e Linux) senza modifiche al codice.
+
+---
+
+## 4. 🚫 Fuori Scopo (Out of Scope) per la v1.0
+
+Per garantire il rilascio di un prodotto "Minimum Viable Product" (MVP) pulito, le seguenti funzionalità sono esplicitamente escluse dalla versione 1.0:
+
+* Multiplayer online o in rete locale.
+* Salvataggio e caricamento dello stato della partita.
+* Diversi livelli di difficoltà dell'AI (es. Minimax imbattibile).
+* Effetti sonori o musica di sottofondo.
+* Personalizzazione dei simboli (es. skin) o dei colori della UI da parte dell'utente.
+* Timer per i turni.
+
+---
+
+## 5. 📖 User Stories
+
+* **Come giocatore**, voglio avviare il gioco e vedere un menu chiaro per poter scegliere se giocare contro un amico o contro il computer.
+* **Come giocatore (PvP)**, voglio poter cliccare su una casella vuota per piazzare il mio simbolo e vedere immediatamente la mossa riflessa sulla scacchiera.
+* **Come giocatore**, quando vinco, voglio che il gioco me lo comunichi chiaramente e mi mostri la linea vincente, così da non avere dubbi sul risultato.
+* **Come giocatore**, quando la partita è in pareggio, voglio un messaggio chiaro che indichi la patta.
+* **Come giocatore**, dopo la fine di una partita, voglio poter scegliere se rigiocare immediatamente o tornare al menu principale senza dover riavviare l'applicazione.
+* **Come giocatore (PvAI)**, mi aspetto che il computer faccia una mossa sensata e che non mi lasci vincere troppo facilmente (bloccando le mie vittorie imminenti).
+
+---
+
