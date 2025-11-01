@@ -11,7 +11,7 @@ def ottieni_membro(n):
 
 def ottieni_operatore_ed_esegui(a, b):
     while True:
-        op = input("Scegli un operatore matematico tra quelli disponibili: +, -, *, / : ")
+        op = input("Scegli un operatore matematico tra quelli disponibili: +, -, *, /, ** : ")
         if op == "+":
             return addizione(a, b)
         elif op == "-":
@@ -19,7 +19,9 @@ def ottieni_operatore_ed_esegui(a, b):
         elif op == "*":
             return moltiplicazione(a, b)
         elif op == "/":
-            return divisione(a, b)                
+            return divisione(a, b)
+        elif op == "**":
+            return esponenziale(a, b)                
         else:
             print("Non hai scelto un operatore disponibile.")
 
@@ -39,6 +41,10 @@ def divisione(a, b):
     else:
         return a / b
 
+def esponenziale(a, b):
+    if a == 0 and b == 0:
+        return "0^0 è una forma indeterminata."
+    return a ** b
 
 
 # --- Flusso Principale ---
