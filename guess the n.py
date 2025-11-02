@@ -2,7 +2,7 @@ import random
 
 x = random.randint(1,6)
 
-guess = int(input("Try to guess the number between 1 and 6"))
+guess = int(input("Try to guess the number between 1 and 6: "))
 
 if guess >=0 and guess <=6:
     if x==guess:

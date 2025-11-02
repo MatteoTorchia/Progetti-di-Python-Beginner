@@ -36,7 +36,7 @@ def hangman():
                 wordList.append("-")
         print("La parola: " , " ".join(wordList))
 
-        userLetter = input("Indovina una lettera:").upper()
+        userLetter = input("Indovina una lettera: ").upper()
         if userLetter in (alphabet - usedLetters):
             usedLetters.add(userLetter)
             if userLetter in wordLetters:

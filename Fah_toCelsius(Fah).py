@@ -4,5 +4,7 @@ def Fah_toCelsius(Fah):
     else:
         return print("Hai inserito un valore inferiore allo zero assoluto!")
 
+
+# --- Flusso Principale ---
 inputFah = float(input("Inserisci la temperatura espressa in fahrenheit"))
 print(Fah_toCelsius(inputFah))

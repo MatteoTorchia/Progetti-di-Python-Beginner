@@ -27,7 +27,7 @@ def ottieni_operatore_ed_esegui(a, b):
 
 
 def addizione(a, b):
-    return a +b
+    return a + b
 
 def sottrazione(a, b):
     return a - b
