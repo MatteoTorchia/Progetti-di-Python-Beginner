@@ -18,30 +18,23 @@ def enter_move(board):
         try:
             move = int(move)
         except ValueError:
-            print("Error: You inserted an illegal value. Try again")
-        for i in board:
-            for j in i:
-                if move == j:
-                    j = "O"
-                    return board
-        else:
-            print("Error: You inserted an illegal value. Try again")   
+            print("Error: You inserted an illegal value. Try again.\n")
+            continue
 
-def enter_move_WRONG(board):
-    while True:
-        move = input("Select a square between 1 and 9: ")
-        try:
-            for i in board:
-                for j in i:
-                    if move == j:
-                        j = "O"
-                        return board
-            else:
-                print("Error: You inserted an illegal value. Try again")
-        except ValueError:
-            print("Error: You inserted an illegal value.")
-    # The function accepts the board's current status, asks the user about their move, 
-    # checks the input, and updates the board according to the user's decision.
+        if move < 1 or move > 9:
+            print("Error: The number must be between 1 and 9. Try again.\n")
+            continue
+        
+        index = move - 1
+        row_index = index // 3
+        col_index = index % 3
+        if board[row_index][col_index] == "X" or board[row_index][col_index] == "O":
+            print("This square is already taken! Try a different one.\n")
+            continue
+        board[row_index][col_index] = "O"
+        return board
+ 
+
 
 
 # --- Main Flow ---
@@ -57,3 +50,14 @@ enter_move(board)
 display_board(board)
 enter_move(board)
 
+display_board(board)
+enter_move(board)
+
+display_board(board)
+enter_move(board)
+
+display_board(board)
+enter_move(board)
+
+display_board(board)
+enter_move(board)
