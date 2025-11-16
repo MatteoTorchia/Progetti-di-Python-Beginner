@@ -92,3 +92,21 @@ board = [
     [4, "X", 6],
     [7, 8, 9]
 ]
+
+display_board(board)
+while True:
+    enter_move(board)
+    display_board(board)
+    if victory_for(board, "O") == True:
+        print("You won!")
+        break
+
+    draw_move(board)
+    display_board(board)
+    if victory_for(board, "X") == True:
+        print("You lost!")
+        break 
+
+    if make_list_of_free_fields(board) == False:
+        print("Tie!")
+        break
