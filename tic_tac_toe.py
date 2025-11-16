@@ -13,7 +13,7 @@ def display_board(board):
 
 def enter_move(board):
     while True:
-        move = input("Select a square between 1 and 9: ")
+        move = input("Select a field, choosing between 1 and 9: ")
         try:
             move = int(move)
         except ValueError:
@@ -28,7 +28,7 @@ def enter_move(board):
         row_index = index // 3
         col_index = index % 3
         if board[row_index][col_index] == "X" or board[row_index][col_index] == "O":
-            print("This square is already taken! Try a different one.\n")
+            print("This field is already taken! Try a different one.\n")
             continue
         board[row_index][col_index] = "O"
         return board
@@ -85,6 +85,12 @@ def draw_move(board):
     move = choice(free_fields)
     board[move[0]][move[1]] = "X"
 
+def is_tie(board):
+    free_fields = make_list_of_free_fields(board)
+    if len(free_fields) == 0:
+        return True
+    return False
+
 
 # --- Main Flow ---
 board = [
@@ -95,18 +101,26 @@ board = [
 
 display_board(board)
 while True:
+    # user's "O" turn
     enter_move(board)
     display_board(board)
     if victory_for(board, "O") == True:
         print("You won!")
         break
+    
+    # check if it's a tie
+    if is_tie(board) == True:
+        print("Tie!")
+        break
 
+    # computer's move
     draw_move(board)
     display_board(board)
     if victory_for(board, "X") == True:
         print("You lost!")
-        break 
+        break
 
-    if make_list_of_free_fields(board) == False:
+    # check if it's a tie
+    if is_tie(board) == True:
         print("Tie!")
         break
