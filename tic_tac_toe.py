@@ -1,8 +1,7 @@
-board = [
-    [1, 2, 3],
-    [4, "X", 6],
-    [7, 8, 9]
-]
+
+from random import choice
+
+
 # --- Functions ---
 def display_board(board):
     for i in board:
@@ -77,38 +76,19 @@ def victory_for(board, sign):
         return True
     if board[0][2] == sign and board[1][1] == sign and board[2][0] == sign:
         return True
+    
+    # if all the above are false
     return False
+
+def draw_move(board):
+    free_fields = make_list_of_free_fields(board)
+    move = choice(free_fields)
+    board[move[0]][move[1]] = "X"
 
 
 # --- Main Flow ---
-make_list_of_free_fields(board)
-display_board(board)
-enter_move(board)
-
-make_list_of_free_fields(board)
-display_board(board)
-enter_move(board)
-
-make_list_of_free_fields(board)
-display_board(board)
-enter_move(board)
-
-make_list_of_free_fields(board)
-display_board(board)
-enter_move(board)
-
-make_list_of_free_fields(board)
-display_board(board)
-enter_move(board)
-
-make_list_of_free_fields(board)
-display_board(board)
-enter_move(board)
-
-make_list_of_free_fields(board)
-display_board(board)
-enter_move(board)
-
-make_list_of_free_fields(board)
-display_board(board)
-enter_move(board)
+board = [
+    [1, 2, 3],
+    [4, "X", 6],
+    [7, 8, 9]
+]
