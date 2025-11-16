@@ -34,7 +34,7 @@ def enter_move(board):
         board[row_index][col_index] = "O"
         return board
 
-# this is my vers that doesn't return a list of tuples but a list of ints
+# this vers doesn't return a list of tuples but a list of ints
 # free_fields = []
 # def make_list_of_free_fields(board):
 #     free_fields.clear()
@@ -54,6 +54,30 @@ def make_list_of_free_fields(board):
                 free_fields.append((row, col))
                 
     return free_fields
+
+def victory_for(board, sign):
+    # rows
+    if board[0][0] == sign and board[0][1] == sign and board[0][2] == sign:
+        return True
+    if board[1][0] == sign and board[1][1] == sign and board[1][2] == sign:
+        return True
+    if board[2][0] == sign and board[2][1] == sign and board[2][2] == sign:
+        return True
+    
+    # col
+    if board[0][0] == sign and board[1][0] == sign and board[2][0] == sign:
+        return True
+    if board[0][1] == sign and board[1][1] == sign and board[2][1] == sign:
+        return True
+    if board[0][2] == sign and board[1][2] == sign and board[2][2] == sign:
+        return True
+    
+    # diagonal
+    if board[0][0] == sign and board[1][1] == sign and board[2][2] == sign:
+        return True
+    if board[0][2] == sign and board[1][1] == sign and board[2][0] == sign:
+        return True
+    return False
 
 
 # --- Main Flow ---
