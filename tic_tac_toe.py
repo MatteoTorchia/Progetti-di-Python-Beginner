@@ -33,31 +33,58 @@ def enter_move(board):
             continue
         board[row_index][col_index] = "O"
         return board
- 
 
+# this is my vers that doesn't return a list of tuples but a list of ints
+# free_fields = []
+# def make_list_of_free_fields(board):
+#     free_fields.clear()
+#     for i in board:
+#         for j in i:
+#             if type(j) == str:
+#                 continue
+#             else:
+#                 free_fields.append(j)
+#     return free_fields
+
+def make_list_of_free_fields(board):
+    free_fields = []
+    for row in range(3):
+        for col in range(3):
+            if type(board[row][col]) == int:
+                free_fields.append((row, col))
+                
+    return free_fields
 
 
 # --- Main Flow ---
+make_list_of_free_fields(board)
 display_board(board)
 enter_move(board)
 
+make_list_of_free_fields(board)
 display_board(board)
 enter_move(board)
 
+make_list_of_free_fields(board)
 display_board(board)
 enter_move(board)
 
+make_list_of_free_fields(board)
 display_board(board)
 enter_move(board)
 
+make_list_of_free_fields(board)
 display_board(board)
 enter_move(board)
 
+make_list_of_free_fields(board)
 display_board(board)
 enter_move(board)
 
+make_list_of_free_fields(board)
 display_board(board)
 enter_move(board)
 
+make_list_of_free_fields(board)
 display_board(board)
 enter_move(board)
