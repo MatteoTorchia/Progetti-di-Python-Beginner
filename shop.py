@@ -3,13 +3,14 @@ cart = []
 
 
 # --- Main Flow ---
-print("--- Welcome to the shop! ---")
+print("--- Welcome to bagio's shop! ---")
+print("Those are the available products:")
 
 for i in catalog:
-    print(i, catalog[i])
+    print(f"- " + i + ": " , catalog[i] , "€")
 
 while True:
-        request = input("What do you want to buy? (type 'stop' to end) ")
+        request = input("\nWhat do you want to buy? (type 'stop' to end) ")
 
         if request == "stop":
             break
@@ -19,3 +20,6 @@ while True:
         else:
             print(f"There is no item such as '{request}'\nTry something different.")
 
+print("--- Recipt ---")
+for i in cart:
+     print(i)
