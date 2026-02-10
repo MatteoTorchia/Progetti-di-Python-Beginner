@@ -18,8 +18,11 @@ while True:
             cart.append(request)
             print(f"Item '{request}' added to cart!")
         else:
-            print(f"There is no item such as '{request}'\nTry something different.")
+            print(f"I'm sorry, there is no item such as '{request}'\nTry something different.")
+
+for i in cart:
+     price += catalog[i]
 
 print("--- Recipt ---")
 for i in cart:
-     print(i)
+     print(f"- ", {i} , " " , catalog[i], " €")
