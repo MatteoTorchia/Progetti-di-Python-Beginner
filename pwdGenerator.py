@@ -1,6 +1,6 @@
 import random
 
-print("Benvenuto al Generatore di Passwordù")
+print("Benvenuto al Generatore di Password")
 
 chars = "QWERTYUIOPASDFGHJKLZXCVBNMqwertyuiopasdfghjklzxcvbnm1234567890!£$%&/()=?*-+.,_;:@"
 
