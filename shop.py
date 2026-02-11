@@ -1,5 +1,5 @@
 catalog = {"apple": 0.5, "orange": 0.6, "bread": 1.0, }
-cart = []
+cart = {}
 
 def get_total_price(cart, price_dict):
     total = 0.00
@@ -28,6 +28,14 @@ while True:
 
 print("---- Receipt ----")
 for item in cart:
-    total = get_total_price(cart, catalog)
     print(f"- {item}: {catalog[item]} €")
-print(f"\nTotal: {total} €")
+
+total = get_total_price(cart, catalog)
+print(f"\n-----Total: {total} €")
+
+#---------------------------------------
+#TODO:
+# (Dizionari): Cambi la struttura del cart.
+# Invece di essere una lista ['apple', 'apple'],
+# diventa un dizionario {'apple': 2}.
+# Questo richiede di riscrivere la funzione del totale.
