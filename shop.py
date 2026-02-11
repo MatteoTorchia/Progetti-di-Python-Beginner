@@ -1,13 +1,18 @@
 catalog = {"apple": 0.5, "orange": 0.6, "bread": 1.0, }
 cart = []
 
+def get_total_price(cart, price_dict):
+    total = 0.00
+    for item in cart:
+        total += price_dict[item]
+    return total       
 
 # --- Main Flow ---
 print("--- Welcome to bagio's shop! ---")
 print("Those are the available products:")
 
-for i in catalog:
-    print(f"- " + i + ": " , catalog[i] , "€")
+for item in catalog:
+    print(f"- {item}: {catalog[item]} €")
 
 while True:
         request = input("\nWhat do you want to buy? (type 'stop' to end) ")
@@ -20,9 +25,9 @@ while True:
         else:
             print(f"I'm sorry, there is no item such as '{request}'\nTry something different.")
 
-for i in cart:
-     price += catalog[i]
 
-print("--- Recipt ---")
-for i in cart:
-     print(f"- ", {i} , " " , catalog[i], " €")
+print("---- Receipt ----")
+for item in cart:
+    total = get_total_price(cart, catalog)
+    print(f"- {item}: {catalog[item]} €")
+print(f"\nTotal: {total} €")
